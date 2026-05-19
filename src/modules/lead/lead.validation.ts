@@ -2,9 +2,25 @@ import { z } from "zod";
 
 export const createLeadSchema =
   z.object({
-    name: z.string(),
+    name: z
+      .string()
+      .min(2),
 
-    email: z.string().email(),
+    email: z
+      .string()
+      .email(),
+
+    phone: z
+      .string()
+      .optional(),
+
+    company: z
+      .string()
+      .optional(),
+
+    note: z
+      .string()
+      .optional(),
 
     status: z
       .enum([

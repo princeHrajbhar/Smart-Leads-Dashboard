@@ -3,7 +3,9 @@ import { SortOrder } from "mongoose";
 
 export const createLeadService =
   async (body: any) => {
-    return await Lead.create(body);
+    return await Lead.create(
+      body
+    );
   };
 
 export const getLeadsService =
@@ -35,8 +37,30 @@ export const getLeadsService =
             $options: "i",
           },
         },
+
         {
           email: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+
+        {
+          phone: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+
+        {
+          company: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+
+        {
+          note: {
             $regex: search,
             $options: "i",
           },
@@ -45,20 +69,25 @@ export const getLeadsService =
     }
 
     const sortOption: {
-  createdAt: SortOrder;
-} =
-  sort === "oldest"
-    ? { createdAt: 1 }
-    : { createdAt: -1 };
+      createdAt: SortOrder;
+    } =
+      sort === "oldest"
+        ? {
+            createdAt: 1,
+          }
+        : {
+            createdAt: -1,
+          };
 
     const skip =
       (Number(page) - 1) *
       Number(limit);
 
-    const leads = await Lead.find(filter)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(Number(limit));
+    const leads =
+      await Lead.find(filter)
+        .sort(sortOption)
+        .skip(skip)
+        .limit(Number(limit));
 
     const total =
       await Lead.countDocuments(
@@ -72,16 +101,20 @@ export const getLeadsService =
         total,
         page: Number(page),
         limit: Number(limit),
-        totalPages: Math.ceil(
-          total / Number(limit)
-        ),
+        totalPages:
+          Math.ceil(
+            total /
+              Number(limit)
+          ),
       },
     };
   };
 
 export const getSingleLeadService =
   async (id: string) => {
-    return await Lead.findById(id);
+    return await Lead.findById(
+      id
+    );
   };
 
 export const updateLeadService =
@@ -90,12 +123,13 @@ export const updateLeadService =
     body: any
   ) => {
     return await Lead.findByIdAndUpdate(
-      id,
-      body,
-      {
-        new: true,
-      }
-    );
+  id,
+  body,
+  {
+    returnDocument: "after",
+    runValidators: true,
+  }
+);
   };
 
 export const deleteLeadService =

@@ -1,6 +1,4 @@
 import {
-  NextFunction,
-  Response,
   RequestHandler,
 } from "express";
 
@@ -18,13 +16,26 @@ export const authorize = (
       req as AuthRequest;
 
     if (
+      !authReq.user
+    ) {
+      res.status(401).json({
+        success: false,
+        message:
+          "Unauthorized",
+      });
+
+      return;
+    }
+
+    if (
       !roles.includes(
         authReq.user.role
       )
     ) {
       res.status(403).json({
         success: false,
-        message: "Forbidden",
+        message:
+          "Forbidden",
       });
 
       return;

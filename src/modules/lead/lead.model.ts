@@ -8,45 +8,69 @@ import {
   LeadStatus,
 } from "./lead.types";
 
-export interface ILead extends Document {
+export interface ILead
+  extends Document {
   name: string;
   email: string;
+  phone?: string;
+  company?: string;
+  note?: string;
   status: LeadStatus;
   source: LeadSource;
 }
 
-const leadSchema = new Schema<ILead>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
+const leadSchema =
+  new Schema<ILead>(
+    {
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
 
-    email: {
-      type: String,
-      required: true,
-    },
+      email: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+      },
 
-    status: {
-      type: String,
-      enum: Object.values(
-        LeadStatus
-      ),
-      default: LeadStatus.NEW,
-    },
+      phone: {
+        type: String,
+        default: "",
+      },
 
-    source: {
-      type: String,
-      enum: Object.values(
-        LeadSource
-      ),
-      required: true,
+      company: {
+        type: String,
+        default: "",
+      },
+
+      note: {
+        type: String,
+        default: "",
+      },
+
+      status: {
+        type: String,
+        enum: Object.values(
+          LeadStatus
+        ),
+        default:
+          LeadStatus.NEW,
+      },
+
+      source: {
+        type: String,
+        enum: Object.values(
+          LeadSource
+        ),
+        required: true,
+      },
     },
-  },
-  {
-    timestamps: true,
-  }
-);
+    {
+      timestamps: true,
+    }
+  );
 
 export const Lead =
   mongoose.model<ILead>(
