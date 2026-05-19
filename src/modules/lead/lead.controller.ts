@@ -3,6 +3,7 @@ import {
   Response,
 } from "express";
 
+import { Parser } from "json2csv";
 import {
   createLeadService,
   deleteLeadService,
@@ -128,6 +129,57 @@ export const deleteLead = async (
     res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+
+// lead.controller.ts
+
+
+
+import { Lead } from "./lead.model";
+
+export const exportLeadsCSV = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const leads = await Lead.find(
+      {},
+      {
+        name: 1,
+        email: 1,
+        phone: 1,
+        company: 1,
+        note: 1,
+        status: 1,
+        source: 1,
+        _id: 0,
+      }
+    ).lean();
+
+    const parser = new Parser();
+
+    const csv = parser.parse(
+      leads
+    );
+
+    res.header(
+      "Content-Type",
+      "text/csv"
+    );
+
+    res.attachment(
+      "leads.csv"
+    );
+
+    return res.send(csv);
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to export leads",
     });
   }
 };

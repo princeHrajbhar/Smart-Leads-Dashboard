@@ -12,6 +12,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/leads", leadRoutes);
 
+
 app.get("/", (req, res) => {
   res.send("Server running...");
 });

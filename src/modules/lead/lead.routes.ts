@@ -11,6 +11,9 @@ import {
 import { protect } from "../../middlewares/auth.middleware";
 
 import { authorize } from "../../middlewares/role.middleware";
+import {
+  exportLeadsCSV,
+} from "./lead.controller";
 
 const router = Router();
 
@@ -44,6 +47,12 @@ router.delete(
   "/:id",
   authorize("ADMIN"),
   deleteLead
+);
+
+// lead.routes.ts
+router.get(
+  "/export/csv",
+  exportLeadsCSV
 );
 
 export default router;
